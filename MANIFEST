@@ -1,0 +1,6 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Device-Velleman-K8055-Native.t
+lib/Device/Velleman/K8055/Native.pm

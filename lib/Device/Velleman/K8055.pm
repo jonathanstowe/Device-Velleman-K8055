@@ -1,40 +1,6 @@
-package Device::Velleman::K8055::Native;
+use v6.c;
 
-use 5.014004;
-use strict;
-use warnings;
-
-use Moose;
-use Moose::Util::TypeConstraints;
-
-use Device::USB;
-
-use Device::Velleman::K8055::Native::OutputData;
-
-use Carp;
-
-use constant {
-   STR_BUFF               => 256,
-   PACKET_LEN             => 8,
-   K8055_IPID             => 0x5500,
-   VELLEMAN_VENDOR_ID     => 0x10cf,
-   K8055_MAX_DEV          => 4,
-   USB_OUT_EP             => 0x01,
-   USB_INP_EP             => 0x81,
-   USB_TIMEOUT            => 20,
-   DIGITAL_INP_OFFSET     => 0,
-   DIGITAL_OUT_OFFSET     => 1,
-   ANALOG_1_OFFSET        => 2,
-   ANALOG_2_OFFSET        => 3,
-   COUNTER_1_OFFSET       => 4,
-   COUNTER_2_OFFSET       => 6,
-   CMD_RESET              => 0x00,
-   CMD_SET_DEBOUNCE_1     => 0x01,
-   CMD_SET_DEBOUNCE_2     => 0x01,
-   CMD_RESET_COUNTER_1    => 0x03,
-   CMD_RESET_COUNTER_2    => 0x04,
-   CMD_SET_ANALOG_DIGITAL => 0x05,
-};
+=begin pod
 
 =head1 NAME
 
@@ -42,11 +8,15 @@ Device::Velleman::K8055::Native
 
 =head1 SYNOPSIS
 
-  use Device::Velleman::K8055::Native;
+=begin code
 
-  my $k8055 =  Device::Velleman::K8055::Native->new(address => 0);
+  use Device::Velleman::K8055;
 
-  '#etc
+  my $k8055 =  Device::Velleman::K8055.new(address => 0);
+
+  #etc
+  
+=end code
 
 =head1 DESCRIPTION
 
@@ -64,166 +34,66 @@ rather than wrapping the library.
 This is the device address of the device that we are interested in.
 It is required by the constructor and can be 0-3
 
-=cut
+=end pod
 
-subtype  'DeviceAddress',
-         as 'Int',
-         where {  $_ >= 0 && $_ < K8055_MAX_DEV },
-         message  { "address must be between 0 and " . ( K8055_MAX_DEV - 1 ) };
+use NativeCall;
 
-has address => (
-                  is => 'rw',
-                  isa   => 'DeviceAddress',
-                  required => 1,
-               );
+class Device::Velleman::K8055 {
 
-=item device
+    constant LIB = %?RESOURCES<libraries/k8055>.Str;
 
-This returns the L<Device::USB::Device> object representing the device
-we are operating on.
+    has Int $.address;
 
-The device is opened and claimed from the operating system, if either of
-these operations fails then it will croak with the specific error.
+    sub OpenDevice(long $address) is native(LIB) returns int32 { * }
 
-=cut
+    sub CloseDevice() is native(LIB) returns int32 { * }
 
-class_type 'Device::USB::Device';
+    sub ReadAnalogChannel(long $channel) is native(LIB) returns long { * }
 
-has device  =>  (
-                  is => 'ro',
-                  isa   => 'Device::USB::Device',
-                  lazy  => 1,
-                  builder  => '_get_device',
-                );
+    sub ReadAllAnalog(Pointer[long] $data1, Pointer[long] $data2) is native(LIB) returns int32 { * }
 
-sub _get_device
-{
-   my ($self) = @_;
+    sub OutputAnalogChannel(long $channel, long  $data) is native(LIB) returns int32 { * }
 
-   my $device;
-   my $ipid = K8055_IPID + $self->address();
-   if ( defined($device = $self->usb()->find_device( VELLEMAN_VENDOR_ID, $ipid ) ) )
-   {
+    sub OutputAllAnalog(long $data1, long  $data2) is native(LIB) returns int32 { * }
 
-      if ( $device->open() )
-      {
-         if ( !$device->claim_interface(0) )
-         {
-            $device->reset();
-            croak "Can't claim interface : $!\n";
-         }
-      }
-      else
-      {
-         $device->reset();
-         croak "Can't open device : $!\n";
-      }
-   }
-   else
-   {
-       if ( $! )
-       {
-         croak $!;
-       }
-       else
-       {
-           croak "Specified device doesn't exist";
-       }
-   }
+    sub ClearAllAnalog() is native(LIB) returns int32 { * }
 
-   return $device;
+    sub ClearAnalogChannel(long $channel) is native(LIB) returns int32 { * }
+
+    sub SetAnalogChannel(long $channel) is native(LIB) returns int32 { * }
+
+    sub SetAllAnalog() is native(LIB) returns int32 { * }
+
+    sub WriteAllDigital(long $data) is native(LIB) returns int32 { * }
+
+    sub ClearDigitalChannel(long $channel) is native(LIB) returns int32 { * }
+
+    sub ClearAllDigital() is native(LIB) returns int32 { * }
+
+    sub SetDigitalChannel(long $channel) is native(LIB) returns int32 { * }
+
+    sub SetAllDigital() is native(LIB) returns int32 { * }
+
+    sub ReadDigitalChannel(long $channel) is native(LIB) returns int32 { * }
+
+    sub ReadAllDigital() is native(LIB) returns long { * }
+
+    sub ResetCounter(long $counter) is native(LIB) returns int32 { * }
+
+    sub ReadCounter(long $counter) is native(LIB) returns long { * }
+
+    sub SetCounterDebounceTime(long $counter, long $debouncetime) is native(LIB) returns int32 { * }
+
+    sub ReadAllValues(Pointer[long] $data1, Pointer[long] $data2, Pointer[long] $data3, Pointer[long] $data4, Pointer[long] $data5) is native(LIB) returns int32 { * }
+
+    sub SetAllValues(int32 $digitaldata, int32 $addata1, int32  $addata2) is native(LIB) returns int32 { * }
+
+    sub SetCurrentDevice(long $device) is native(LIB) returns long { * }
+
+    sub SearchDevices() is native(LIB) returns long { * }
+
+    sub Version() is native(LIB) returns Str { * }
+
 }
 
-=item usb
-
-This returns the L<Device::USB> object that we are using.
-
-=cut
-
-class_type  'Device::USB';
-
-has usb  => (
-               is => 'rw',
-               isa   => 'Device::USB',
-               default  => sub { Device::USB->new() },
-            );
-
-=item output
-
-The L<Device::Velleman::K8055::Native::OutputData> that represents the output.
-
-=cut
-
-has output  => (
-                  is => 'ro',
-                  isa   => 'Device::Velleman::K8055::Native::OutputData',
-                  default  => sub { return Device::Velleman::K8055::Native::OutputData->new() },
-               handles  => {
-                   '_command' => 'command',
-                   '_bitmask' => 'bitmask',
-               }
-               );
-
-sub write_k8055_data
-{
-    my ( $self, $cmd ) = @_;
-
-    $self->_command($cmd);
-
-    my $buff = $self->output()->as_bytes();
-   my $rc = 0;
-    for ( 0 .. 2 )
-    {
-        if ( $self->device()->interrupt_write(USB_OUT_EP, $buff, PACKET_LEN, USB_TIMEOUT) )
-        {
-            $rc   =  1;
-            last;
-        }
-    }
-
-   return $rc;
-}
-
-=item write_all_digital
-
-Write the specified to the digital outputs
-
-=cut
-
-sub write_all_digital
-{
-    my ( $self, $bitmask ) = @_;
-
-    $self->_bitmask($bitmask);
-    return $self->write_k8055_data(CMD_SET_ANALOG_DIGITAL);
-}
-
-
-=back
-
-=head1 SEE ALSO
-
-There is a also a L<Device::Velleman::K8055::Fuse> that uses an alternative
-method of access to the device.
-
-Most of the hard work for this was done by the authors of the Linux version
-of the Velleman library, http://libk8055.sourceforge.net/ though I haven't
-used any of the code, the discovery of the interface details was crucial :)
-
-=head1 AUTHOR
-
-Jonathan Stowe, E<lt>jns@gellyfish.co.ukE<gt>
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (C) 2013 by Jonathan Stowe
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.14.4 or,
-at your option, any later version of Perl 5 you may have available.
-
-
-=cut
-
-1;
-
+# vim: expandtab shiftwidth=4 ft=perl6

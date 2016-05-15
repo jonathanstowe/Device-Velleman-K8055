@@ -188,9 +188,9 @@ static int WriteK8055Data(unsigned char cmd)
 static int takeover_device(usb_dev_handle * udev, int interface)
 {
     char driver_name[STR_BUFF];
+    int ret = K8055_ERROR;
 
     memset(driver_name, 0, STR_BUFF);
-    int ret = K8055_ERROR;
 
     assert(udev != NULL);
     ret = usb_get_driver_np(udev, interface, driver_name, sizeof(driver_name));

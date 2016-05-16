@@ -163,6 +163,15 @@ static void print_error(const char * str) {
 }
 
 int k8055_open_device(int port, k8055_device** device) {
+
+	int r;
+	ssize_t size;
+
+	libusb_device **connected_devices = NULL;
+	libusb_device *k8055 = NULL; /* device on port */
+	libusb_device_handle *handle = NULL; /* handle to device on port */
+	k8055_device* _device = NULL;
+
 	if (port < 0 || K8055_MAX_DEVICES <= port) {
 		print_error("invalid port number, port p should be 0<=p<=3");
 		return K8055_ERROR_INDEX;
@@ -176,15 +185,13 @@ int k8055_open_device(int port, k8055_device** device) {
 		}
 	}
 
-	libusb_device **connected_devices = NULL;
 
-	ssize_t size = libusb_get_device_list(context, &connected_devices); /* get all devices on system */
+	size = libusb_get_device_list(context, &connected_devices); /* get all devices on system */
 	if (size <= 0) {
 		print_error("no usb devices found on system");
 		return K8055_ERROR_NO_DEVICES;
 	}
 
-	libusb_device *k8055 = NULL; /* device on port */
 
 	for (size_t i = 0; i < size; ++i) { /* look for the device at given port */
 		struct libusb_device_descriptor descriptor;
@@ -198,9 +205,8 @@ int k8055_open_device(int port, k8055_device** device) {
 		return K8055_ERROR_NO_K8055;
 	}
 
-	libusb_device_handle *handle = NULL; /* handle to device on port */
 
-	int r = libusb_open(k8055, &handle); /* open device */
+	r = libusb_open(k8055, &handle); /* open device */
 	libusb_free_device_list(connected_devices, 1); /* we got the handle, free references to other devices */
 
 	if (r == LIBUSB_ERROR_ACCESS) {
@@ -225,7 +231,6 @@ int k8055_open_device(int port, k8055_device** device) {
 		return K8055_ERROR_OPEN;
 	}
 
-	k8055_device* _device = NULL;
 	_device = (k8055_device*)malloc(sizeof(k8055_device));
 	if (_device == NULL) {
 		print_error("could not allocate memory for device");
@@ -270,13 +275,13 @@ void k8055_close_device(k8055_device* device) {
  * @return K8055_ERROR_WRITE if another error occurred during the write process */
 static int k8055_write_data(k8055_device* device) {
 	int write_status = 0;
+	int transferred = 0;
 
 	if (device->device_handle == NULL) {
 		print_error("unable to write data, device not open");
 		return K8055_ERROR_CLOSED;
 	}
 
-	int transferred = 0;
 	for (int i = 0; i < WRITE_TRIES; ++i) { /* number of tries on failure */
 		write_status = libusb_interrupt_transfer(device->device_handle,
 				USB_OUT_EP, (unsigned char *) device->data_out, PACKET_LENGTH,
@@ -302,13 +307,13 @@ static int k8055_write_data(k8055_device* device) {
  * @return K8055_ERROR_READ if another error occurred during the read process */
 static int k8055_read_data(k8055_device* device, int cycles) {
 	int read_status = 0;
+	int transferred = 0;
 
 	if (device->device_handle == NULL) {
 		print_error("unable to read data, device not open");
 		return K8055_ERROR_CLOSED;
 	}
 
-	int transferred = 0;
 	for (int i = 0; i < READ_TRIES; ++i) { /* number of tries on failure */
 		for (int j = 0; j < cycles; ++j) { /* read at least twice to get fresh data, (i.e. circumvent some kind of buffer) */
 			read_status = libusb_interrupt_transfer(device->device_handle,
@@ -428,10 +433,11 @@ int k8055_set_debounce_time(k8055_device* device, int counter, int debounce) {
 
 int k8055_get_all_input(k8055_device* device, int *bitmask, int *analog0,
 		int *analog1, int *counter0, int *counter1, bool quick) {
+	int r;
 	int cycles = 2;
 	if (quick)
 		cycles = 1;
-	int r = k8055_read_data(device, cycles);
+	r = k8055_read_data(device, cycles);
 	if (r != 0)
 		return r;
 

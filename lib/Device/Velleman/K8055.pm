@@ -43,56 +43,56 @@ class Device::Velleman::K8055 {
     constant LIB = %?RESOURCES<libraries/k8055>.Str;
 
     has Int $.address;
-
-    sub OpenDevice(long $address) is native(LIB) returns int32 { * }
-
-    sub CloseDevice() is native(LIB) returns int32 { * }
-
-    sub ReadAnalogChannel(long $channel) is native(LIB) returns long { * }
-
-    sub ReadAllAnalog(Pointer[long] $data1, Pointer[long] $data2) is native(LIB) returns int32 { * }
-
-    sub OutputAnalogChannel(long $channel, long  $data) is native(LIB) returns int32 { * }
-
-    sub OutputAllAnalog(long $data1, long  $data2) is native(LIB) returns int32 { * }
-
-    sub ClearAllAnalog() is native(LIB) returns int32 { * }
-
-    sub ClearAnalogChannel(long $channel) is native(LIB) returns int32 { * }
-
-    sub SetAnalogChannel(long $channel) is native(LIB) returns int32 { * }
-
-    sub SetAllAnalog() is native(LIB) returns int32 { * }
-
-    sub WriteAllDigital(long $data) is native(LIB) returns int32 { * }
-
-    sub ClearDigitalChannel(long $channel) is native(LIB) returns int32 { * }
-
-    sub ClearAllDigital() is native(LIB) returns int32 { * }
-
-    sub SetDigitalChannel(long $channel) is native(LIB) returns int32 { * }
-
-    sub SetAllDigital() is native(LIB) returns int32 { * }
-
-    sub ReadDigitalChannel(long $channel) is native(LIB) returns int32 { * }
-
-    sub ReadAllDigital() is native(LIB) returns long { * }
-
-    sub ResetCounter(long $counter) is native(LIB) returns int32 { * }
-
-    sub ReadCounter(long $counter) is native(LIB) returns long { * }
-
-    sub SetCounterDebounceTime(long $counter, long $debouncetime) is native(LIB) returns int32 { * }
-
-    sub ReadAllValues(Pointer[long] $data1, Pointer[long] $data2, Pointer[long] $data3, Pointer[long] $data4, Pointer[long] $data5) is native(LIB) returns int32 { * }
-
-    sub SetAllValues(int32 $digitaldata, int32 $addata1, int32  $addata2) is native(LIB) returns int32 { * }
-
-    sub SetCurrentDevice(long $device) is native(LIB) returns long { * }
-
-    sub SearchDevices() is native(LIB) returns long { * }
-
-    sub Version() is native(LIB) returns Str { * }
+    
+    enum Error (
+                   SUCCESS => 0,
+                   ERROR => -1,
+                   INIT_LIBUSB => -2,
+                   NO_DEVICES => -3,
+                   NO_K8055 => -4,
+                   ACCESS => -6,
+                   OPEN => -7,
+                   CLOSED => -8,
+                   WRITE => -9,
+                   READ => -10,
+                   INDEX => -11,
+                   MEM => -12
+                );
+    
+    class Device is repr('CStruct') {
+    }
+    
+    
+    sub k8055_debug(bool $value) is native(LIB)  { * }
+    
+    sub k8055_open_device(int32 $port, Pointer[Device] $device) is native(LIB) returns int32 { * }
+    
+    sub k8055_close_device(Device $device) is native(LIB)  { * }
+    
+    sub k8055_set_all_digital(Device $device, int32 $bitmask) is native(LIB) returns int32 { * }
+    
+    sub k8055_set_digital(Device $device, int32 $channel, bool  $value) is native(LIB) returns int32 { * }
+    
+    sub k8055_set_all_analog(Device $device, int32 $analog0, int32 $analog1) is native(LIB) returns int32 { * }
+    
+    sub k8055_set_analog(Device $device, int32 $channel, int32 $value) is native(LIB) returns int32 { * }
+    
+    sub k8055_reset_counter(Device $device, int32 $counter) is native(LIB) returns int32 { * }
+    
+    sub k8055_set_debounce_time(Device $device, int32 $counter, int32 $debounce) is native(LIB) returns int32 { * }
+    
+    sub k8055_get_all_input(Device $device,     Pointer[int32] $digitalBitmask, 
+                                                Pointer[int32] $analog0, 
+                                                Pointer[int32] $analog1, 
+                                                Pointer[int32] $counter0, 
+                                                Pointer[int32] $counter1, bool $quick) is native(LIB) returns int32 { * }
+    
+    sub k8055_get_all_output(Device $device,    Pointer[int32] $digitalBitmask,
+                                                Pointer[int32] $analog0,
+                                                Pointer[int32] $analog1,
+                                                Pointer[int32] $debounce0,
+                                                Pointer[int32] $debounce1) is native(LIB)  { * }
+    
 
 }
 

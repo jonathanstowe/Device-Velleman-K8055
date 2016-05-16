@@ -150,6 +150,10 @@ class Device::Velleman::K8055 {
             }
             $digitalBitmask, $analog0, $analog1, $debounce0, $debounce1;
         }
+
+        method reset() {
+            self.set-all-digital(0) && self.set-all-analog(0,0);
+        }
     }
     
     sub k8055_open_device(int32 $port, Pointer $device is rw) is native(LIB) returns int32 { * }
@@ -163,10 +167,17 @@ class Device::Velleman::K8055 {
         }
         $p.deref;
     }
+
+    method close(Bool :$reset = False) {
+        if $reset {
+            self.reset;
+        }
+        $!device.close;
+    }
     
     sub k8055_debug(bool $value) is native(LIB)  { * }
 
-    has Device $!device handles <set-all-digital set-digital set-all-analog set-analog reset-counter set-debounce-time get-all-input get-all-output>;
+    has Device $!device handles <set-all-digital set-digital set-all-analog set-analog reset-counter set-debounce-time get-all-input get-all-output reset>;
 
     submethod BUILD(Int :$!address where 0 <= * < 4 = 0, Bool :$debug) {
         $!device = self!open-device(:$!address);

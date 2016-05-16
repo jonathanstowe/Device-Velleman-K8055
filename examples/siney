@@ -10,6 +10,13 @@ sub MAIN(Int :$address where 0 <= * < 4 = 0, Int :$samplerate = 44100, Int :$fre
 
     my $d = Device::Velleman::K8055.new(:$address);
 
+    signal(SIGINT).tap({
+        if $d.defined {
+            $d.close(:reset);
+            exit;
+        }
+    });
+
 
     my $sec = 60/($bpm * 4);
     my $inc = $samplerate * $sec;
@@ -23,6 +30,11 @@ sub MAIN(Int :$address where 0 <= * < 4 = 0, Int :$samplerate = 44100, Int :$fre
             $pos += $inc;
         }
     }
+
+    END {
+    }
+
+    
 }
 
 # vim: expandtab shiftwidth=4 ft=perl6

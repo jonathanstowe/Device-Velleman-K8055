@@ -215,21 +215,21 @@ class Device::Velleman::K8055 {
     
         sub k8055_set_analog(Device $device, int32 $channel, int32 $value) is native(LIB) returns int32 { * }
 
-        method set-analog(Int $channel where 2 > * > 0, AnalogValue $value) returns Bool {
+        method set-analog(Int $channel where 2 > * >= 0, AnalogValue $value) returns Bool {
             my $rc = k8055_set_analog(self, $channel, $value);
             $rc == SUCCESS;
         }
     
         sub k8055_reset_counter(Device $device, int32 $counter) is native(LIB) returns int32 { * }
 
-        method reset-counter(Int $counter where 2 > * > 0) returns Bool {
+        method reset-counter(Int $counter where 2 > * >= 0) returns Bool {
             my $rc = k8055_reset_counter(self, $counter);
             $rc == SUCCESS;
         }
     
         sub k8055_set_debounce_time(Device $device, int32 $counter, int32 $debounce) is native(LIB) returns int32 { * }
 
-        method set-debounce-time(Int $counter where 2 > * > 0, Int $debounce where * < 7450) returns Bool {
+        method set-debounce-time(Int $counter where 2 > * >= 0, Int $debounce where * < 7450) returns Bool {
             my $rc = k8055_set_debounce_time(self, $counter, $debounce);
             $rc == SUCCESS;
         }

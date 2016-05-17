@@ -265,11 +265,8 @@ class Device::Velleman::K8055 {
             my int32 $analog1;
             my int32 $debounce0;
             my int32 $debounce1;
-            my $rc = k8055_get_all_output(self, $digitalBitmask, $analog0, $analog1, $debounce0, $debounce1);
+            k8055_get_all_output(self, $digitalBitmask, $analog0, $analog1, $debounce0, $debounce1);
 
-            if $rc != SUCCESS {
-                die "Failed to get inputs ({ Error($rc) })";
-            }
             $digitalBitmask, $analog0, $analog1, $debounce0, $debounce1;
         }
 

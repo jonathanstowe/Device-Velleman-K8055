@@ -103,9 +103,9 @@ if however you have any suggestions, feedback or improvements
 than please post them on [Github](https://github.com/jonathanstowe/Device-Velleman-K8055-Native/issues)
 or even better send a pull request.
 
-## Copyright & License
+## Copyright & Licence
 
-This is free software, see the [LICENSE](LICENSE) file in the
+This is free software, see the [LICENCE](LICENCE) file in the
 distrubution.
 
 © Jonathan Stowe 2016

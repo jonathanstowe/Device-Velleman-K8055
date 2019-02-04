@@ -190,46 +190,46 @@ class Device::Velleman::K8055 {
             k8055_close_device(self);
         }
 
-        sub k8055_set_all_digital(Device $device, int32 $bitmask) is native(LIB) returns int32 { * }
+        sub k8055_set_all_digital(Device $device, int32 $bitmask --> int32 ) is native(LIB) { * }
 
-        method set-all-digital(Int $bitmask where * < 256) returns Bool {
+        method set-all-digital(Int $bitmask where * < 256 --> Bool ) {
             my $rc = k8055_set_all_digital(self, $bitmask);
             $rc == SUCCESS;
         }
 
-        sub k8055_set_digital(Device $device, int32 $channel, bool  $value) is native(LIB) returns int32 { * }
+        sub k8055_set_digital(Device $device, int32 $channel, bool  $value --> int32 ) is native(LIB) { * }
 
-        method set-digital(Int $channel where * < 8, Bool $v) returns Bool {
+        method set-digital(Int $channel where * < 8, Bool $v --> Bool ) {
             my $rc = k8055_set_digital(self, $channel, $v.value);
             $rc == SUCCESS;
         }
 
-        sub k8055_set_all_analog(Device $device, int32 $analog0, int32 $analog1) is native(LIB) returns int32 { * }
+        sub k8055_set_all_analog(Device $device, int32 $analog0, int32 $analog1 --> int32 ) is native(LIB) { * }
 
         subset AnalogValue of Int where * < 256;
 
-        method set-all-analog(AnalogValue $analog0, AnalogValue $analog1) returns Bool {
+        method set-all-analog(AnalogValue $analog0, AnalogValue $analog1 --> Bool ) {
             my $rc = k8055_set_all_analog(self, $analog0, $analog1);
             $rc == SUCCESS;
         }
 
-        sub k8055_set_analog(Device $device, int32 $channel, int32 $value) is native(LIB) returns int32 { * }
+        sub k8055_set_analog(Device $device, int32 $channel, int32 $value --> int32 ) is native(LIB) { * }
 
-        method set-analog(Int $channel where 2 > * >= 0, AnalogValue $value) returns Bool {
+        method set-analog(Int $channel where 2 > * >= 0, AnalogValue $value --> Bool ) {
             my $rc = k8055_set_analog(self, $channel, $value);
             $rc == SUCCESS;
         }
 
-        sub k8055_reset_counter(Device $device, int32 $counter) is native(LIB) returns int32 { * }
+        sub k8055_reset_counter(Device $device, int32 $counter --> int32 ) is native(LIB) { * }
 
-        method reset-counter(Int $counter where 2 > * >= 0) returns Bool {
+        method reset-counter(Int $counter where 2 > * >= 0 --> Bool ) {
             my $rc = k8055_reset_counter(self, $counter);
             $rc == SUCCESS;
         }
 
-        sub k8055_set_debounce_time(Device $device, int32 $counter, int32 $debounce) is native(LIB) returns int32 { * }
+        sub k8055_set_debounce_time(Device $device, int32 $counter, int32 $debounce) is native(LIB) { * }
 
-        method set-debounce-time(Int $counter where 2 > * >= 0, Int $debounce where * < 7450) returns Bool {
+        method set-debounce-time(Int $counter where 2 > * >= 0, Int $debounce where * < 7450 --> Bool ) {
             my $rc = k8055_set_debounce_time(self, $counter, $debounce);
             $rc == SUCCESS;
         }
@@ -238,7 +238,7 @@ class Device::Velleman::K8055 {
                                                     int32 $analog0 is rw,
                                                     int32 $analog1 is rw,
                                                     int32 $counter0  is rw,
-                                                    int32 $counter1 is rw, bool $quick) is native(LIB) returns int32 { * }
+                                                    int32 $counter1 is rw, bool $quick --> int32 ) is native(LIB) { * }
 
         method get-all-input(Bool :$quick = False) {
             my int32 $digitalBitmask;
@@ -275,9 +275,9 @@ class Device::Velleman::K8055 {
         }
     }
 
-    sub k8055_open_device(int32 $port, Pointer $device is rw) is native(LIB) returns int32 { * }
+    sub k8055_open_device(int32 $port, Pointer $device is rw --> int32 ) is native(LIB) { * }
 
-    method !open-device(Int :$port where { 0 <= $_ < 4 } = 0) returns Device {
+    method !open-device(Int :$port where { 0 <= $_ < 4 } = 0 --> Device ) {
         my $p = Pointer[Device].new;
         my $rc = k8055_open_device($port, $p);
 

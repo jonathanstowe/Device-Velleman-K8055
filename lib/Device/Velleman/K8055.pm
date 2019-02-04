@@ -1,4 +1,4 @@
-use v6.c;
+use v6;
 
 =begin pod
 
@@ -59,7 +59,7 @@ is someone else wants to do that.
 
     method new(Int :$!address where 0 <= * < 4 = 0, Bool :$debug)
 
-The constructor of the class.  This will attempt to open the 
+The constructor of the class.  This will attempt to open the
 device, throwing an exception if it is unable.  The C<address>
 parameter can be used if there is more than one board plugged
 in (the default is 0, the first board present.) The C<:debug>
@@ -76,7 +76,7 @@ to 0 switching off the built in LEDs.
 
 =head2 method set-all-digital
 
-	method set-all-digital(Int $bitmask where * < 256) returns Bool
+    method set-all-digital(Int $bitmask where * < 256) returns Bool
 
 This sets all the digital outputs based on the bitmask (in the range
 0 - 255,) where each of the eight bits represents a single digital
@@ -165,7 +165,7 @@ class Device::Velleman::K8055 {
     constant LIB = %?RESOURCES<libraries/k8055>.Str;
 
     has Int $.address;
-    
+
     enum Error (
                    SUCCESS => 0,
                    ERROR => -1,
@@ -180,30 +180,30 @@ class Device::Velleman::K8055 {
                    INDEX => -11,
                    MEM => -12
                 );
-    
+
     my class Device is repr('CPointer') {
 
-    
+
         sub k8055_close_device(Device $device) is native(LIB)  { * }
 
         method close() {
             k8055_close_device(self);
         }
-     
+
         sub k8055_set_all_digital(Device $device, int32 $bitmask) is native(LIB) returns int32 { * }
 
         method set-all-digital(Int $bitmask where * < 256) returns Bool {
             my $rc = k8055_set_all_digital(self, $bitmask);
             $rc == SUCCESS;
         }
-    
+
         sub k8055_set_digital(Device $device, int32 $channel, bool  $value) is native(LIB) returns int32 { * }
 
         method set-digital(Int $channel where * < 8, Bool $v) returns Bool {
             my $rc = k8055_set_digital(self, $channel, $v.value);
             $rc == SUCCESS;
         }
-    
+
         sub k8055_set_all_analog(Device $device, int32 $analog0, int32 $analog1) is native(LIB) returns int32 { * }
 
         subset AnalogValue of Int where * < 256;
@@ -212,32 +212,32 @@ class Device::Velleman::K8055 {
             my $rc = k8055_set_all_analog(self, $analog0, $analog1);
             $rc == SUCCESS;
         }
-    
+
         sub k8055_set_analog(Device $device, int32 $channel, int32 $value) is native(LIB) returns int32 { * }
 
         method set-analog(Int $channel where 2 > * >= 0, AnalogValue $value) returns Bool {
             my $rc = k8055_set_analog(self, $channel, $value);
             $rc == SUCCESS;
         }
-    
+
         sub k8055_reset_counter(Device $device, int32 $counter) is native(LIB) returns int32 { * }
 
         method reset-counter(Int $counter where 2 > * >= 0) returns Bool {
             my $rc = k8055_reset_counter(self, $counter);
             $rc == SUCCESS;
         }
-    
+
         sub k8055_set_debounce_time(Device $device, int32 $counter, int32 $debounce) is native(LIB) returns int32 { * }
 
         method set-debounce-time(Int $counter where 2 > * >= 0, Int $debounce where * < 7450) returns Bool {
             my $rc = k8055_set_debounce_time(self, $counter, $debounce);
             $rc == SUCCESS;
         }
-    
-        sub k8055_get_all_input(Device $device,     int32 $digitalBitmask is rw, 
-                                                    int32 $analog0 is rw, 
-                                                    int32 $analog1 is rw, 
-                                                    int32 $counter0  is rw, 
+
+        sub k8055_get_all_input(Device $device,     int32 $digitalBitmask is rw,
+                                                    int32 $analog0 is rw,
+                                                    int32 $analog1 is rw,
+                                                    int32 $counter0  is rw,
                                                     int32 $counter1 is rw, bool $quick) is native(LIB) returns int32 { * }
 
         method get-all-input(Bool :$quick = False) {
@@ -253,7 +253,7 @@ class Device::Velleman::K8055 {
             }
             $digitalBitmask, $analog0, $analog1, $counter0, $counter1;
         }
-    
+
         sub k8055_get_all_output(Device $device,    int32 $digitalBitmask is rw,
                                                     int32 $analog0 is rw,
                                                     int32 $analog1 is rw,
@@ -274,13 +274,13 @@ class Device::Velleman::K8055 {
             self.set-all-digital(0) && self.set-all-analog(0,0);
         }
     }
-    
+
     sub k8055_open_device(int32 $port, Pointer $device is rw) is native(LIB) returns int32 { * }
 
     method !open-device(Int :$port where { 0 <= $_ < 4 } = 0) returns Device {
         my $p = Pointer[Device].new;
         my $rc = k8055_open_device($port, $p);
-            
+
         if $rc != SUCCESS {
                 die "Cannot open device";
         }
@@ -293,7 +293,7 @@ class Device::Velleman::K8055 {
         }
         $!device.close;
     }
-    
+
     sub k8055_debug(bool $value) is native(LIB)  { * }
 
     has Device $!device handles <set-all-digital set-digital set-all-analog set-analog reset-counter set-debounce-time get-all-input get-all-output reset>;
@@ -304,7 +304,7 @@ class Device::Velleman::K8055 {
             k8055_debug(1);
         }
     }
-    
+
 }
 
 # vim: expandtab shiftwidth=4 ft=perl6

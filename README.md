@@ -104,7 +104,7 @@ or even better send a pull request.
 This is free software, see the [LICENCE](LICENCE) file in the
 distrubution.
 
-© Jonathan Stowe 2016, 2017
+© Jonathan Stowe 2016 - 2019
 
 The terms of the k8055 library used are described in its
 [README](https://github.com/jodersky/k8055/blob/master/README.md).

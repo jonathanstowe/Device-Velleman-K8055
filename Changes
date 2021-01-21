@@ -1,3 +1,5 @@
+v0.0.4		Thu 21 Jan 09:56:36 GMT 2021
+	* Switch to Distribution::Builder::MakeFromJSON
 v0.0.3      Mon  4 Feb 16:07:14 GMT 2019
     * Spring clean and upload to CPAN
 v0.0.2		Tue Jan 24 21:17:11 2017 +0000 

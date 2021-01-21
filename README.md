@@ -1,5 +1,7 @@
 # Device::Velleman::K8055
 
+![Build Status](https://github.com/jonathanstowe/Device-Velleman-K8055/workflows/CI/badge.svg)
+
 A perl interface to the [Velleman USB Experiment Kit](http://www.velleman.eu/products/view/?lang=en&id=351346).
 
 ## Synopsis

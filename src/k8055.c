@@ -193,7 +193,7 @@ int k8055_open_device(int port, k8055_device** device) {
 	}
 
 
-	for (size_t i = 0; i < size; ++i) { /* look for the device at given port */
+	for (ssize_t i = 0; i < size; ++i) { /* look for the device at given port */
 		struct libusb_device_descriptor descriptor;
 		libusb_get_device_descriptor(connected_devices[i], &descriptor);
 		if (descriptor.idVendor == VELLEMAN_VENDOR_ID
@@ -236,21 +236,21 @@ int k8055_open_device(int port, k8055_device** device) {
 		print_error("could not allocate memory for device");
 		return K8055_ERROR_MEM;
 	}
-	
+
 	_device->device_handle = handle; /* add usb handle */
-	
+
 	for (int i = 0; i < PACKET_LENGTH; ++i) { /* initialize command data */
 		_device->data_out[i]=0;
 		_device->current_out[i]=0;
 	}
-	
+
 	k8055_set_all_digital(_device, 0);
 	k8055_set_all_analog(_device, 0, 0);
 	k8055_set_debounce_time(_device, 0, 2);
 	k8055_set_debounce_time(_device, 1, 2);
 	k8055_reset_counter(_device, 0);
 	k8055_reset_counter(_device, 1);
-	
+
 	*device = _device;
 	k8055_open_devices += 1;
 
@@ -293,12 +293,12 @@ static int k8055_write_data(k8055_device* device) {
 		print_error("could not write packet");
 		return K8055_ERROR_WRITE;
 	}
-	
+
 	/* if there was no error up to this point, assume that data_out now reflects the devices output status */
 	for (int i = 0; i < PACKET_LENGTH; ++i) {
 		device->current_out[i]=device->data_out[i];
 	}
-	
+
 	return 0;
 }
 
@@ -338,9 +338,9 @@ static unsigned char k8055_ms_to_char(int t) {
 	 found the formula dbt=0,115*x^2 quite near the actual values, a
 	 little below at really low values and a little above at really
 	 high values. But the time set with this formula is within +-4% */
-	
+
 	int c = t;
-	
+
 	if (c > 7450)
 		c = 7450;
 	c = sqrt(c / 0.115);
@@ -460,7 +460,7 @@ int k8055_get_all_input(k8055_device* device, int *bitmask, int *analog0,
 
 void k8055_get_all_output(k8055_device* device, int* bitmask, int *analog0,
 		int *analog1, int *debounce0, int *debounce1) {
-	
+
 	if (bitmask != NULL)
 		*bitmask = device->current_out[OUT_DIGITAL_OFFSET];
 	if (analog0 != NULL)

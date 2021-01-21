@@ -307,4 +307,4 @@ class Device::Velleman::K8055 {
 
 }
 
-# vim: expandtab shiftwidth=4 ft=perl6
+# vim: expandtab shiftwidth=4 ft=raku

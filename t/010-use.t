@@ -1,4 +1,4 @@
-#!perl6
+#!raku
 
 use v6;
 
@@ -7,4 +7,4 @@ plan 1;
 
 use-ok 'Device::Velleman::K8055', "can use okay";
 
-# vim: expandtab shiftwidth=4 ft=perl6
+# vim: expandtab shiftwidth=4 ft=raku

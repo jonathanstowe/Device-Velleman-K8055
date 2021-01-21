@@ -2,11 +2,11 @@
 
 ![Build Status](https://github.com/jonathanstowe/Device-Velleman-K8055/workflows/CI/badge.svg)
 
-A perl interface to the [Velleman USB Experiment Kit](http://www.velleman.eu/products/view/?lang=en&id=351346).
+A Raku interface to the [Velleman USB Experiment Kit](http://www.velleman.eu/products/view/?lang=en&id=351346).
 
 ## Synopsis
 
-```perl6
+```raku
 use Device::Velleman::K8055;
 
 my $device = Device::Velleman::K8055.new(address => 0);
@@ -86,8 +86,7 @@ If the above steps haven't been done before trying to install
 the module, it will attempt to skip most of the tests and
 may even succeed in installing but may not work well.
 
-If you have a working rakudo Perl 6 installation you should 
-be able to install with ```zef``` :
+If you have a working Rakudo installation you should be able to install with ```zef``` :
 
     zef install Device::Velleman::K8055
 

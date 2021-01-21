@@ -3,7 +3,7 @@
   "version": "0.0.4",
   "auth": "github:jonathanstowe",
   "api": "1.0",
-  "description": "A Perl 6 interface to the Velleman USB Experiment Kit",
+  "description": "A Raku interface to the Velleman USB Experiment Kit",
   "source-url": "git://github.com/jonathanstowe/Device-Velleman-K8055.git",
   "support": {
     "source": "git://github.com/jonathanstowe/Device-Velleman-K8055.git"

@@ -1,4 +1,4 @@
-#!perl6
+#!raku
 
 use Device::Velleman::K8055;
 
@@ -37,4 +37,4 @@ sub MAIN(Int :$address where 0 <= * < 4 = 0, Int :$samplerate = 44100, Int :$fre
     
 }
 
-# vim: expandtab shiftwidth=4 ft=perl6
+# vim: expandtab shiftwidth=4 ft=raku

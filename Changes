@@ -1,3 +1,5 @@
+v0.0.5	Sun  7 Aug 09:44:11 BST 2022
+	* Upload to zef repository
 v0.0.4		Thu 21 Jan 09:56:36 GMT 2021
 	* Switch to Distribution::Builder::MakeFromJSON
 v0.0.3      Mon  4 Feb 16:07:14 GMT 2019
@@ -6,3 +8,4 @@ v0.0.2		Tue Jan 24 21:17:11 2017 +0000
 	* Make zef compatible
 v0.0.1		Tue May 17 16:11:52 2016 +0100 
 	* Initial release
+

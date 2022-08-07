@@ -1,48 +1,44 @@
 {
-  "name": "Device::Velleman::K8055",
-  "version": "0.0.4",
-  "auth": "github:jonathanstowe",
-  "api": "1.0",
-  "description": "A Raku interface to the Velleman USB Experiment Kit",
-  "source-url": "git://github.com/jonathanstowe/Device-Velleman-K8055.git",
-  "support": {
-    "source": "git://github.com/jonathanstowe/Device-Velleman-K8055.git"
-  },
-  "perl": "6.*",
-  "raku": "6.*",
+  "version": "0.0.5",
+  "meta-version": "1",
   "resources": [
     "libraries/k8055"
   ],
+  "test-depends": [
+  ],
+  "support": {
+    "source": "git://github.com/jonathanstowe/Device-Velleman-K8055.git"
+  },
+  "source-url": "git://github.com/jonathanstowe/Device-Velleman-K8055.git",
   "depends": {
-     "build" : {
-        "requires" : [
-           "Distribution::Builder::MakeFromJSON:ver<0.6+>"
-        ]
-     },
-     "runtime": {
-        "requires": [
-           "usb:from<native>"
-        ]
-     }
+    "build": {
+      "requires": [
+        "Distribution::Builder::MakeFromJSON:ver<0.6+>"
+      ]
+    },
+    "runtime": {
+      "requires": [
+        "usb:from<native>"
+      ]
+    }
   },
-  "builder": "Distribution::Builder::MakeFromJSON",
-  "build" : {
-     "src-dir" : "src",
-     "makefile-variables" : {
-        "libk8055": {"resource": "libraries/k8055"}
-     }
+  "name": "Device::Velleman::K8055",
+  "description": "A Raku interface to the Velleman USB Experiment Kit",
+  "license": "Artistic-2.0",
+  "build-depends": [
+  ],
+  "api": "1.0",
+  "provides": {
+    "Device::Velleman::K8055": "lib/Device/Velleman/K8055.pm"
   },
+  "raku": "6.*",
+  "authors": [
+    "Jonathan Stowe <jns+gh@gellyfish.co.uk>"
+  ],
   "tags": [
     "USB",
     "device",
     "experimental"
   ],
-  "license": "Artistic-2.0",
-  "provides": {
-    "Device::Velleman::K8055": "lib/Device/Velleman/K8055.pm"
-  },
-  "authors": [
-    "Jonathan Stowe <jns+gh@gellyfish.co.uk>"
-  ],
-  "meta-version": "1"
+  "auth": "zef:jonathanstowe"
 }

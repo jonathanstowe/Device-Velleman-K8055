@@ -1,10 +1,8 @@
 {
-  "version": "0.0.5",
+  "version": "0.0.6",
   "meta-version": "1",
   "resources": [
     "libraries/k8055"
-  ],
-  "test-depends": [
   ],
   "support": {
     "source": "git://github.com/jonathanstowe/Device-Velleman-K8055.git"
@@ -22,11 +20,16 @@
       ]
     }
   },
+  "builder": "Distribution::Builder::MakeFromJSON",
+  "build" : {
+     "src-dir" : "src",
+     "makefile-variables" : {
+        "libk8055": {"resource": "libraries/k8055"}
+     }
+  },
   "name": "Device::Velleman::K8055",
   "description": "A Raku interface to the Velleman USB Experiment Kit",
   "license": "Artistic-2.0",
-  "build-depends": [
-  ],
   "api": "1.0",
   "provides": {
     "Device::Velleman::K8055": "lib/Device/Velleman/K8055.pm"
